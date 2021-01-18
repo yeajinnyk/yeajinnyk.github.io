@@ -162,6 +162,7 @@ function keyPressed() {
 }
 
 function mousePressed() {
+  playMusic();
   
   //clicking on cats to interact in the future
   for (let cat of cats) {
@@ -181,11 +182,11 @@ function mousePressed() {
   }
 }
 
+
+
 //SETUP & DRAW
 function setup() {
   createCanvas(gameWindowSize, gameWindowSize);
-
-  playMusic();
   
   catX = gameWindowSize / 5;
   catY = gameWindowSize / 2;
