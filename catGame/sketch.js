@@ -95,6 +95,7 @@ function preload() {
 //AUDIO
 function playMusic() {
   bgMusic.play();
+ 
 }
 
 //IMAGES
@@ -183,8 +184,7 @@ function mousePressed() {
 //SETUP & DRAW
 function setup() {
   createCanvas(gameWindowSize, gameWindowSize);
-  
-  playAgain = bgMusic.isPlaying();
+
   playMusic();
   
   catX = gameWindowSize / 5;
