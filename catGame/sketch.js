@@ -8,6 +8,9 @@
 //NOTE TO SELF: link different js files (e.g. global variable sketch file) in the html before the sketch.js (opt.)
 //NEXT STEPS (Hopefully): loop bg music cleanly + code in the fishing mini game!
 
+//NOTE TO MR. SCHELLENBERG: the code at this time can only play background music, go past the starting menu with the enter button,
+// and move back and forth between the fishing game background by clicking the icons.
+
 
 
 //GLOBAL VARIABLES
@@ -222,7 +225,7 @@ function setup() {
    
   },
   
-  //not filled in yet
+  //not filled in yet. (for future cats!)
     { name: "blank",
    likes: "blank",
    dislikes: "blank", 
