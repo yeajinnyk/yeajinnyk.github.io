@@ -42,7 +42,8 @@ let exitButtonHeight;
 let exitButtonX;
 let exitButtonY;
 
-let fishingGameIconSize;
+let iconSize;
+
 let fishingGameIconX;
 let fishingGameIconY;
 
@@ -133,7 +134,7 @@ function displayMainGame() {
 //fishing game images
 function displayFishingGameIcon() {
   if (menu.displayStart === false && menu.displayFishingGame === false) {
-    image(fishingGameIcon, fishingGameIconX, fishingGameIconY, fishingGameIconSize, fishingGameIconSize);
+    image(fishingGameIcon, fishingGameIconX, fishingGameIconY, iconSize, iconSize);
   }
 }
 
@@ -147,6 +148,10 @@ function displayFishingGame() {
   if (menu.displayFishingGame === true) {
     image(fishingWaitingOne, 0, 0, gameWindowSize, gameWindowSize);
   }
+}
+
+function displayButtonMusic() {
+  ellipse(gameWindowSize * 0.8, gameWindowSize * 0.9, iconSize, iconSize);
 }
 
 
@@ -172,7 +177,7 @@ function mousePressed() {
   }
   
   //fishing game icon --> fishing game
-  if ((mouseX > fishingGameIconX && mouseX < fishingGameIconX + fishingGameIconSize && mouseY > fishingGameIconY && mouseY < fishingGameIconY + fishingGameIconSize) && menu.displayStart === false) {
+  if ((mouseX > fishingGameIconX && mouseX < fishingGameIconX + iconSize && mouseY > fishingGameIconY && mouseY < fishingGameIconY + iconSize) && menu.displayStart === false) {
     menu.displayFishingGame = true;
   }
   
@@ -209,7 +214,7 @@ function setup() {
   exitButtonX = gameWindowSize * 0.8;
   exitButtonY = gameWindowSize * 0.05;
   
-  fishingGameIconSize = gameWindowSize * 0.08;
+  iconSize = gameWindowSize * 0.08;
   fishingGameIconX = gameWindowSize * 0.85;
   fishingGameIconY = gameWindowSize * 0.2;
 
@@ -255,5 +260,6 @@ function draw() {
   
   displayFishingGame();
   displayExitButton();
+  displayButtonMusic();
 }
 
