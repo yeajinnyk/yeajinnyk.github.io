@@ -17,6 +17,7 @@
 
 //audio 
 let bgMusic;
+let mute = true;
 
 //cats
 let cats;
@@ -46,6 +47,10 @@ let iconSize;
 
 let fishingGameIconX;
 let fishingGameIconY;
+
+let audioIconSize;
+let audioIconX;
+let audioIconY;
 
 //menus and settings
 let menu = {
@@ -151,7 +156,7 @@ function displayFishingGame() {
 }
 
 function displayButtonMusic() {
-  ellipse(gameWindowSize * 0.8, gameWindowSize * 0.9, iconSize, iconSize);
+  rect(audioIconX, audioIconY, audioIconSize, audioIconSize);
 }
 
 
@@ -167,8 +172,6 @@ function keyPressed() {
 }
 
 function mousePressed() {
-  playMusic();
-  
   //clicking on cats to interact in the future
   for (let cat of cats) {
     if ((mouseX > cat.x && mouseX < cat.x + cat.width && mouseY > cat.y && mouseY < cat.y + cat.height) && menu.displayStart === false) {
@@ -184,6 +187,17 @@ function mousePressed() {
   //leave fishing game
   if ((mouseX > exitButtonX && mouseX < exitButtonX + exitButtonWidth && mouseY > exitButtonY && mouseY < exitButtonY + exitButtonHeight) && menu.displayFishingGame) {
     menu.displayFishingGame = false;
+  }
+
+  //audio button
+  if (mouseX > audioIconX && mouseX < audioIconX + audioIconSize && mouseY > audioIconY && mouseY < audioIconY + audioIconSize) {
+    mute = !mute;
+    if (mute) {
+      bgMusic.stop();
+    }
+    else if (mute === false) {
+      playMusic();
+    }
   }
 }
 
@@ -215,6 +229,11 @@ function setup() {
   exitButtonY = gameWindowSize * 0.05;
   
   iconSize = gameWindowSize * 0.08;
+
+  audioIconSize = iconSize * 0.7;
+  audioIconX = gameWindowSize * 0.05;
+  audioIconY = gameWindowSize * 0.95;
+
   fishingGameIconX = gameWindowSize * 0.85;
   fishingGameIconY = gameWindowSize * 0.2;
 
