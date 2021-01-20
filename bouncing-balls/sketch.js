@@ -2,12 +2,8 @@
 // Jinny Kim
 // 01. 19. 2021
 //
-// Extra for Experts:
-// - describe what you did to take this project "above and beyond"
 
 let theBouncingBalls = [];
-
-
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
