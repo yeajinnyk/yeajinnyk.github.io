@@ -21,7 +21,7 @@ function mousePressed() {
     y: mouseY,
     diameter: random(25, 100),
     dx: random(-5, 5),
-    dy: (random -5, 5),
+    dy: random(-5, 5),
     theColor: color(random(255), random(255), random(255), random(255)), //4th value is opacity
   };
   theBouncingBalls.push(ball);
