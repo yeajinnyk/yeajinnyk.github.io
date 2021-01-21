@@ -231,8 +231,8 @@ function setup() {
   iconSize = gameWindowSize * 0.08;
 
   audioIconSize = iconSize * 0.7;
-  audioIconX = gameWindowSize * 0.05;
-  audioIconY = gameWindowSize * 0.95;
+  audioIconX = gameWindowSize * 0.03;
+  audioIconY = gameWindowSize * 0.92;
 
   fishingGameIconX = gameWindowSize * 0.85;
   fishingGameIconY = gameWindowSize * 0.2;
