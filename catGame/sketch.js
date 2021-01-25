@@ -48,6 +48,9 @@ let iconSize;
 let fishingGameIconX;
 let fishingGameIconY;
 
+let ticTacToeGameIconX;
+let ticTacToeGameIconY;
+
 let audioIconSize;
 let audioIconX;
 let audioIconY;
@@ -56,6 +59,7 @@ let audioIconY;
 let menu = {
   displayStart: true,
   displayFishingGame: false,
+  displayTicTacToeGame: false,
 }
 
 //(haven't incorporated them in yet)
@@ -136,6 +140,43 @@ function displayMainGame() {
   }
 }
 
+//tic tac toe game
+function displayTicTacToeGame() {
+  if (menu.displayTicTacToeGame) {
+    background("pink");
+    createGrid();
+  }
+}
+
+function displayTicTacToeGameIcon() {
+  if (menu.displayStart === false && menu.displayTicTacToeGame === false) {
+    rect(ticTacToeGameIconX, ticTacToeGameIconY, iconSize, iconSize);
+  }
+}
+
+function createGrid() {
+  let grid = [[0, 0, 0],
+              [0, 0, 0],
+              [0, 0, 0]];
+
+  let gridX = width *0.2;
+  let gridY = height *0.25;
+  let gridSize = width *0.2;
+
+  for (let y = 0; y < 3; y++) {
+    for (let x = 0; x < 3; x++) {
+      if (grid[y][x] === 0) {
+        fill("white");
+      }
+      else {
+        fill("black");
+      }
+
+      rect(x * gridSize + gridX, y * gridSize + gridY, gridSize, gridSize);
+    }
+  }
+}
+
 //fishing game images
 function displayFishingGameIcon() {
   if (menu.displayStart === false && menu.displayFishingGame === false) {
@@ -144,7 +185,7 @@ function displayFishingGameIcon() {
 }
 
 function displayExitButton() {
-  if (menu.displayFishingGame) {
+  if (menu.displayFishingGame || menu.displayTicTacToeGame) {
     image(buttonExit, exitButtonX, exitButtonY, exitButtonWidth, exitButtonHeight);
   }
 }
@@ -154,6 +195,7 @@ function displayFishingGame() {
     image(fishingWaitingOne, 0, 0, gameWindowSize, gameWindowSize);
   }
 }
+
 
 function displayButtonMusic() {
   rect(audioIconX, audioIconY, audioIconSize, audioIconSize);
@@ -184,9 +226,26 @@ function mousePressed() {
     menu.displayFishingGame = true;
   }
   
-  //leave fishing game
-  if ((mouseX > exitButtonX && mouseX < exitButtonX + exitButtonWidth && mouseY > exitButtonY && mouseY < exitButtonY + exitButtonHeight) && menu.displayFishingGame) {
+  //leave mini games
+  if ((mouseX > exitButtonX && mouseX < exitButtonX + exitButtonWidth && mouseY > exitButtonY && mouseY < exitButtonY + exitButtonHeight) && (menu.displayFishingGame || menu.displayTicTacToeGame)) {
     menu.displayFishingGame = false;
+    menu.displayTicTacToeGame = false;
+  }
+
+  //tic tac toe game icon --> tic tac toe game
+  if ((mouseX > ticTacToeGameIconX && mouseX < ticTacToeGameIconX + iconSize && mouseY > ticTacToeGameIconY && mouseY < ticTacToeGameIconY + iconSize) && menu.displayStart === false) {
+    menu.displayTicTacToeGame = true;
+  }
+  
+  //tic tac toe game
+  let x = Math.floor(mouseX / gridSize);
+  let y = Math.floor(mouseY / gridSize);
+
+  if (grid[y][x] === 1) {
+    grid[y][x] = 0;
+  }
+  else if (grid[y][x] === 0) {
+    grid[y][x] = 1;
   }
 
   //audio button
@@ -234,6 +293,9 @@ function setup() {
   audioIconX = gameWindowSize * 0.03;
   audioIconY = gameWindowSize * 0.92;
 
+  ticTacToeGameIconX = gameWindowSize * 0.85;
+  ticTacToeGameIconY = gameWindowSize * 0.3;
+
   fishingGameIconX = gameWindowSize * 0.85;
   fishingGameIconY = gameWindowSize * 0.2;
 
@@ -274,11 +336,15 @@ function draw() {
   displayHowToPlayButton();
   displayMainGame();
   displayFishingGameIcon();
+  displayTicTacToeGameIcon();
   
   displayCat();
   
   displayFishingGame();
-  displayExitButton();
   displayButtonMusic();
+  
+  displayTicTacToeGame();
+
+  displayExitButton();
 }
 
