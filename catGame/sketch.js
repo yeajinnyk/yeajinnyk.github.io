@@ -60,6 +60,7 @@ let menu = {
   displayStart: true,
   displayFishingGame: false,
   displayTicTacToeGame: false,
+  displayLobby: false,
 }
 
 //(haven't incorporated them in yet)
@@ -111,7 +112,7 @@ function playMusic() {
 //IMAGES
 
 function displayCat() {
-  if (menu.displayStart === false) {
+  if (menu.displayLobby) {
     image(commonCat, catX, catY, catWidth, catHeight);
   }
 }
@@ -135,7 +136,7 @@ function displayMenu() {
 }
 
 function displayMainGame() {
-  if (menu.displayStart === false && menu.displayFishingGame === false) {
+  if (menu.displayStart === false && menu.displayLobby) {
     background(220);
   }
 }
@@ -144,42 +145,18 @@ function displayMainGame() {
 function displayTicTacToeGame() {
   if (menu.displayTicTacToeGame) {
     background("pink");
-    createGrid();
   }
 }
 
 function displayTicTacToeGameIcon() {
-  if (menu.displayStart === false && menu.displayTicTacToeGame === false) {
+  if (menu.displayLobby) {
     rect(ticTacToeGameIconX, ticTacToeGameIconY, iconSize, iconSize);
-  }
-}
-
-function createGrid() {
-  let grid = [[0, 0, 0],
-              [0, 0, 0],
-              [0, 0, 0]];
-
-  let gridX = width *0.2;
-  let gridY = height *0.25;
-  let gridSize = width *0.2;
-
-  for (let y = 0; y < 3; y++) {
-    for (let x = 0; x < 3; x++) {
-      if (grid[y][x] === 0) {
-        fill("white");
-      }
-      else {
-        fill("black");
-      }
-
-      rect(x * gridSize + gridX, y * gridSize + gridY, gridSize, gridSize);
-    }
   }
 }
 
 //fishing game images
 function displayFishingGameIcon() {
-  if (menu.displayStart === false && menu.displayFishingGame === false) {
+  if (menu.displayLobby) {
     image(fishingGameIcon, fishingGameIconX, fishingGameIconY, iconSize, iconSize);
   }
 }
@@ -191,7 +168,7 @@ function displayExitButton() {
 }
 
 function displayFishingGame() {
-  if (menu.displayFishingGame === true) {
+  if (menu.displayFishingGame) {
     image(fishingWaitingOne, 0, 0, gameWindowSize, gameWindowSize);
   }
 }
@@ -204,48 +181,37 @@ function displayButtonMusic() {
 
 //CONTROLS
 function keyPressed() {
-  if (keyCode === 13 && menu.displayStart === true) { //move past starting menu
+  if (keyCode === 13 && menu.displayStart) { //move past starting menu
     menu.displayStart = false;
-  }
-  if (keyCode === 70 && menu.displayStart === false) { //open up fishing game
-    menu.displayFishingGame = !menu.displayFishingGame;
-    
+    menu.displayLobby = true;
   }
 }
 
 function mousePressed() {
   //clicking on cats to interact in the future
   for (let cat of cats) {
-    if ((mouseX > cat.x && mouseX < cat.x + cat.width && mouseY > cat.y && mouseY < cat.y + cat.height) && menu.displayStart === false) {
+    if ((mouseX > cat.x && mouseX < cat.x + cat.width && mouseY > cat.y && mouseY < cat.y + cat.height) && menu.displayLobby) {
       console.log(cat.name);
     }
   }
   
   //fishing game icon --> fishing game
-  if ((mouseX > fishingGameIconX && mouseX < fishingGameIconX + iconSize && mouseY > fishingGameIconY && mouseY < fishingGameIconY + iconSize) && menu.displayStart === false) {
+  if ((mouseX > fishingGameIconX && mouseX < fishingGameIconX + iconSize && mouseY > fishingGameIconY && mouseY < fishingGameIconY + iconSize) && menu.displayLobby) {
     menu.displayFishingGame = true;
+    menu.displayLobby = false;
   }
   
   //leave mini games
   if ((mouseX > exitButtonX && mouseX < exitButtonX + exitButtonWidth && mouseY > exitButtonY && mouseY < exitButtonY + exitButtonHeight) && (menu.displayFishingGame || menu.displayTicTacToeGame)) {
     menu.displayFishingGame = false;
     menu.displayTicTacToeGame = false;
+    menu.displayLobby = true;
   }
 
   //tic tac toe game icon --> tic tac toe game
-  if ((mouseX > ticTacToeGameIconX && mouseX < ticTacToeGameIconX + iconSize && mouseY > ticTacToeGameIconY && mouseY < ticTacToeGameIconY + iconSize) && menu.displayStart === false) {
+  if ((mouseX > ticTacToeGameIconX && mouseX < ticTacToeGameIconX + iconSize && mouseY > ticTacToeGameIconY && mouseY < ticTacToeGameIconY + iconSize) && menu.displayLobby) {
     menu.displayTicTacToeGame = true;
-  }
-  
-  //tic tac toe game
-  let x = Math.floor(mouseX / gridSize);
-  let y = Math.floor(mouseY / gridSize);
-
-  if (grid[y][x] === 1) {
-    grid[y][x] = 0;
-  }
-  else if (grid[y][x] === 0) {
-    grid[y][x] = 1;
+    menu.displayLobby = false;
   }
 
   //audio button
