@@ -8,9 +8,6 @@
 let grid = createEmptyBoard();
 let rows, cols, cellSize;
 
-
-//https://editor.p5js.org/2402183/sketches/-9p5VEm4e
-
 function setup() {
   if (windowWidth > windowHeight) {
     createCanvas(windowHeight, windowHeight);
@@ -24,6 +21,18 @@ function setup() {
 
   rows = grid.length;
   cols = grid[0].length;
+}
+
+function windowResized() {
+  if (windowWidth > windowHeight) {
+    resizeCanvas(windowHeight, windowHeight);
+  }
+  else if (windowWidth < windowHeight) {
+    resizeCanvas(windowWidth, windowWidth);
+  }
+  else {
+    resizeCanvas(windowWidth, windowHeight);
+  }  
 }
 
 function draw() {
