@@ -6,6 +6,15 @@
 // - describe what you did to take this project "above and beyond"
 
 
+//NOTE TO SELF: 
+    //NEXT THINGS TO WORK ON: -computer knowing where to put its tiles
+    //                        -talley scores
+    //                        -UI (menu, buttons, particular victory screens)
+    //                        -add music + sound effects
+    //                        -add little extra UI (floating characters?) (OPT)
+
+
+
 //GLOBAL VARIABLES
 let grid;
 let rows, cols, cellSize;
