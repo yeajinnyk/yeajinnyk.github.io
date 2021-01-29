@@ -1,11 +1,12 @@
-// 2D Array Assignment
+// 2D Array Assignment (Tic-Tac-Toe Game)
 // Jinny Kim
 // 01. 27. 2021
 //
 // Extra for Experts:
 // - describe what you did to take this project "above and beyond"
 
-//global variables
+
+//GLOBAL VARIABLES
 let grid;
 let rows, cols, cellSize;
 let xImg, oImg, victoryScreenImg;
@@ -19,7 +20,7 @@ let victoryScreen;
 
 let gameMode;
 
-
+//PRELOAD + SETUP
 function preload() {
   xImg = loadImage("assets/x.png");
   oImg = loadImage("assets/o.png");
@@ -27,7 +28,7 @@ function preload() {
 }
 
 function setup() {
-  //make sure canvas is square no matter the window's dimensions
+  //makes sure canvas is square no matter the window's dimensions
   if (windowWidth > windowHeight) {
     createCanvas(windowHeight, windowHeight);
   }
@@ -48,6 +49,7 @@ function setup() {
   yourTurn = true;
 }
 
+//INTERACTIVE CONTROLS
 function keyPressed() {
   if (key === "1") {
     gameMode = "comp";
@@ -60,17 +62,27 @@ function keyPressed() {
   }
 }
 
-function draw() {
-  background("white");
-  computerTurn();
-  displayBoard();
-  winCheck();
-  displayVictoryScreen();
+function mousePressed() {
+  let x = Math.floor(mouseX / cellSize);
+  let y = Math.floor(mouseY / cellSize);
+
+  if (yourTurn && grid[y][x] === 0) { //o
+    grid[y][x] = 2;
+    yourTurn = !yourTurn;
+    lastSwitchTime = millis();
+  
+  }
+  if (gameMode === "pvp" && !yourTurn && grid[y][x] === 0) {
+    grid[y][x] = 1;
+    yourTurn = !yourTurn;
+  }
+
 }
 
+//FUNCTIONS FOR THE BOARD ITSELF
 function createEmptyBoard() {
   let emptyBoard = [];
-
+  
   for (let y = 0; y < 3; y++) {
     emptyBoard.push([]);
     for (let x = 0; x < 3; x++) {
@@ -97,34 +109,19 @@ function displayBoard() {
   }
 }
 
-function mousePressed() {
-  let x = Math.floor(mouseX / cellSize);
-  let y = Math.floor(mouseY / cellSize);
-
-  if (yourTurn && grid[y][x] === 0) { //o
-    grid[y][x] = 2;
-    yourTurn = !yourTurn;
-    lastSwitchTime = millis();
-  
-  }
-  if (gameMode === "pvp" && !yourTurn && grid[y][x] === 0) {
-    grid[y][x] = 1;
-    yourTurn = !yourTurn;
-  }
-
-}
-
+//FUNCTIONS CONTROLLING COMPUTER PLAYER
 function computerTurn() {
   if (gameMode === "comp" && yourTurn === false && millis() - lastSwitchTime > waitTime) {
     //computer takes its turn
-
+    
     console.log("x");
     yourTurn = !yourTurn;
   }
 }
 
+//VICTORY CONDITIONS
 function winCheck() {
-
+  
   //across, down, zigzag from top left
   if (grid[0][0] !== 0 && grid[0][0] === grid[0][1] && grid[0][0] === grid[0][2]) {
     victoryScreen = true;
@@ -135,22 +132,22 @@ function winCheck() {
   if (grid[0][0] !== 0 && grid[0][0] === grid[1][0] && grid[0][0] === grid[2][0]) {
     victoryScreen = true;
   }
-
+  
   //across horizontal middle
   if (grid[1][0] !== 0 && grid[1][0] === grid[1][1] && grid[1][0] === grid[1][2]) { 
     victoryScreen = true;
   }
-
+  
   //down vertical middle
   if (grid[0][1] !== 0 && grid[0][1] === grid[1][1] && grid[0][1] === grid[2][1]) {
     victoryScreen = true;
   }
-
+  
   //down vertical right
   if (grid[0][2] !== 0 && grid[0][2] === grid[1][2] && grid[0][2] === grid[2][2]) {
     victoryScreen = true;
   }
-
+  
   //across, zigzag from bottom left
   if (grid[2][0] !== 0 && grid[2][0] === grid[2][1] && grid[2][0] === grid[2][2]) {
     victoryScreen = true;
@@ -160,9 +157,19 @@ function winCheck() {
   }
 }
 
+//DISPLAY UI
 function displayVictoryScreen() {
   if (victoryScreen) {
     image(victoryScreenImg, 0, 0, width, height);
     
   }
+}
+
+//DRAW LOOP (PUT EVERYTHING TOGETHER!)
+function draw() {
+  background("white");
+  computerTurn();
+  displayBoard();
+  winCheck();
+  displayVictoryScreen();
 }
