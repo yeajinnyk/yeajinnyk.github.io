@@ -5,7 +5,7 @@
 // Extra for Experts:
 // - describe what you did to take this project "above and beyond"
 
-
+//global variables
 let grid;
 let rows, cols, cellSize;
 let xImg, oImg, victoryScreenImg;
@@ -19,6 +19,7 @@ let victoryScreen;
 
 let gameMode;
 
+
 function preload() {
   xImg = loadImage("assets/x.png");
   oImg = loadImage("assets/o.png");
@@ -26,6 +27,7 @@ function preload() {
 }
 
 function setup() {
+  //make sure canvas is square no matter the window's dimensions
   if (windowWidth > windowHeight) {
     createCanvas(windowHeight, windowHeight);
   }
@@ -35,6 +37,7 @@ function setup() {
   else {
     createCanvas(windowWidth, windowHeight);
   }
+  
   grid = createEmptyBoard();
   
   rows = grid.length;
@@ -43,18 +46,6 @@ function setup() {
   
   victoryScreen = false;
   yourTurn = true;
-}
-
-function windowResized() {
-  if (windowWidth > windowHeight) {
-    resizeCanvas(windowHeight, windowHeight);
-  }
-  else if (windowWidth < windowHeight) {
-    resizeCanvas(windowWidth, windowWidth);
-  }
-  else {
-    resizeCanvas(windowWidth, windowHeight);
-  }  
 }
 
 function keyPressed() {
@@ -172,6 +163,6 @@ function winCheck() {
 function displayVictoryScreen() {
   if (victoryScreen) {
     image(victoryScreenImg, 0, 0, width, height);
-
+    
   }
 }
