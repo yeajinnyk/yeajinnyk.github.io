@@ -24,7 +24,8 @@ let waitTime = 2000;
 let lastSwitchTime = 0;
 
 let computerFirstTurn;
-let victoryScreen;
+let randomX, randomY;
+let victoryScreen, otherVictoryScreenImg, drawScreenImg;
 
 let gameMode;
 
@@ -32,7 +33,11 @@ let gameMode;
 function preload() {
   xImg = loadImage("assets/x.png");
   oImg = loadImage("assets/o.png");
+
   victoryScreenImg = loadImage("assets/tempVictory.png");
+  otherVictoryScreenImg = loadImage("assets/otherVictoryTemp.png");
+  drawScreenImg = loadImage("assets/tempDraw.png");
+
 }
 
 function setup() {
@@ -123,8 +128,8 @@ function displayBoard() {
 //FUNCTIONS CONTROLLING COMPUTER PLAYER
 function computerTurn() {
   if (gameMode === "comp" && yourTurn === false && millis() - lastSwitchTime > waitTime) {
-    let randomX = int(random(3));
-    let randomY = int(random(3));
+    randomX = int(random(3));
+    randomY = int(random(3));
 
     //place X where COMPUTER might win (prioritize its own victory)
     if (grid[0][0] === 1 && grid[0][1] === 1 && grid[0][2] === 0) {
@@ -305,11 +310,12 @@ function computerTurn() {
 
     //random placing
     else {
-      for (let i = 0; i < 9; i++) {
-        if (grid[randomY][randomX] === 0) {
-          grid[randomY][randomX] = 1;
-        }
-
+      while (grid[randomY][randomX] !== 0) {
+        randomX = int(random(3));
+        randomY = int(random(3));
+      }
+      if (grid[randomY][randomX] === 0) {
+        grid[randomY][randomX] = 1;
       }
     }
 
@@ -319,47 +325,53 @@ function computerTurn() {
 
 
 //VICTORY CONDITIONS
-function winCheck() {
+function winCheck(oOrX, whoseVictory) {
   
   //across, down, zigzag from top left
-  if (grid[0][0] !== 0 && grid[0][0] === grid[0][1] && grid[0][0] === grid[0][2]) {
-    victoryScreen = true;
+  if (grid[0][0] === oOrX && grid[0][0] === grid[0][1] && grid[0][0] === grid[0][2]) {
+    victoryScreen = whoseVictory;
   }
-  if (grid[0][0] !== 0 && grid[0][0] === grid[1][1] && grid[0][0] === grid[2][2]) {
-    victoryScreen = true;
+  else if (grid[0][0] === oOrX && grid[0][0] === grid[1][1] && grid[0][0] === grid[2][2]) {
+    victoryScreen = whoseVictory;
   }
-  if (grid[0][0] !== 0 && grid[0][0] === grid[1][0] && grid[0][0] === grid[2][0]) {
-    victoryScreen = true;
+  else if (grid[0][0] === oOrX && grid[0][0] === grid[1][0] && grid[0][0] === grid[2][0]) {
+    victoryScreen = whoseVictory;
   }
   
   //across horizontal middle
-  if (grid[1][0] !== 0 && grid[1][0] === grid[1][1] && grid[1][0] === grid[1][2]) { 
-    victoryScreen = true;
+  else if (grid[1][0] === oOrX && grid[1][0] === grid[1][1] && grid[1][0] === grid[1][2]) { 
+    victoryScreen = whoseVictory;
   }
   
   //down vertical middle
-  if (grid[0][1] !== 0 && grid[0][1] === grid[1][1] && grid[0][1] === grid[2][1]) {
-    victoryScreen = true;
+  else if (grid[0][1] === oOrX && grid[0][1] === grid[1][1] && grid[0][1] === grid[2][1]) {
+    victoryScreen = whoseVictory;
   }
   
   //down vertical right
-  if (grid[0][2] !== 0 && grid[0][2] === grid[1][2] && grid[0][2] === grid[2][2]) {
-    victoryScreen = true;
+  else if (grid[0][2] === oOrX && grid[0][2] === grid[1][2] && grid[0][2] === grid[2][2]) {
+    victoryScreen = whoseVictory;
   }
   
   //across, zigzag from bottom left
-  if (grid[2][0] !== 0 && grid[2][0] === grid[2][1] && grid[2][0] === grid[2][2]) {
-    victoryScreen = true;
+  else if (grid[2][0] === oOrX && grid[2][0] === grid[2][1] && grid[2][0] === grid[2][2]) {
+    victoryScreen = whoseVictory;
   }
-  if (grid[2][0] !== 0 && grid[2][0] === grid[1][1] && grid[2][0] === grid[0][2]) {
-    victoryScreen = true;
+  else if (grid[2][0] === oOrX && grid[2][0] === grid[1][1] && grid[2][0] === grid[0][2]) {
+    victoryScreen = whoseVictory;
   }
 }
 
 //DISPLAY UI
 function displayVictoryScreen() {
-  if (victoryScreen) {
-    image(victoryScreenImg, 0, 0, width, height);
+  if (victoryScreen === "other player win") { 
+    image(otherVictoryScreenImg, 0, 0, width, height); //other player win!
+  }
+  else if (victoryScreen === "main player win") {
+    image(victoryScreenImg, 0, 0, width, height); //main player win!
+  }
+  else if (victoryScreen === "draw") {
+    image(drawScreenImg, 0, 0, width, height); //draw screen
   }
 }
 
@@ -368,6 +380,7 @@ function draw() {
   background("white");
   computerTurn();
   displayBoard();
-  winCheck();
+  winCheck(1, "other player win");
+  winCheck(2, "main player win");
   displayVictoryScreen();
 }
