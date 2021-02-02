@@ -7,11 +7,10 @@
 
 
 //NOTE TO SELF: 
-    //NEXT THINGS TO WORK ON: -computer knowing where to put its tiles
-    //                        -talley scores
-    //                        -UI (menu, buttons, particular victory screens)
-    //                        -add music + sound effects
-    //                        -add little extra UI (floating characters?) (OPT)
+//NEXT THINGS TO WORK ON: 
+//                        -talley scores
+//                        -UI (menu, buttons, particular victory screens)
+//                        -add music + sound effects
 
 
 
@@ -124,113 +123,200 @@ function displayBoard() {
 //FUNCTIONS CONTROLLING COMPUTER PLAYER
 function computerTurn() {
   if (gameMode === "comp" && yourTurn === false && millis() - lastSwitchTime > waitTime) {
-    //computer takes its turn
-    
-    //random first turn
-    if (computerFirstTurn === 1) {
-  
-      if (grid[randomY][randomX] === 0) {
-        grid[randomY][randomX] = 1;
-        computerFirstTurn += 1;
-      }
+    let randomX = int(random(3));
+    let randomY = int(random(3));
+
+    //place X where COMPUTER might win (prioritize its own victory)
+    if (grid[0][0] === 1 && grid[0][1] === 1 && grid[0][2] === 0) {
+      grid[0][2] = 1;
+    }
+    else if (grid[0][0] === 1 && grid[0][2] === 1 && grid[0][1] === 0) {
+      grid[0][1] = 1;
+    }
+    else if (grid[0][1] === 1 && grid[0][2] === 1 && grid[0][0] === 0) {
+      grid[0][0] = 1;
     }
 
+    //middle row-- across
+    else if (grid[1][0] === 1 && grid[1][1] === 1 && grid[1][2] === 0) {
+      grid[1][2] = 1;
+    }
+    else if (grid[1][0] === 1 && grid[1][2] === 1 && grid[1][1] === 0) {
+      grid[1][1] = 1;
+    }
+    else if (grid[1][1] === 1 && grid[1][2] === 1 && grid[1][0] === 0) {
+      grid[1][0] = 1;
+    }
+
+    //bottom row-- across
+    else if (grid[2][0] === 1 && grid[2][1] === 1 && grid[2][2] === 0) {
+      grid[2][2] = 1;
+    }
+    else if (grid[2][0] === 1 && grid[2][2] === 1 && grid[2][1] === 0) {
+      grid[2][1] = 1;
+    }
+    else if (grid[2][1] === 1 && grid[2][2] === 1 && grid[2][0] === 0) {
+      grid[2][0] = 1;
+    }
+
+    //1st column-- down
+    else if (grid[0][0] === 1 && grid[1][0] === 1 && grid[2][0] === 0) {
+      grid[2][0] = 1;
+    }
+    else if (grid[0][0] === 1 && grid[2][0] === 1 && grid[1][0] === 0) {
+      grid[1][0] = 1;
+    }
+    else if (grid[1][0] === 1 && grid[2][0] === 1 && grid[0][0] === 0) {
+      grid[0][0] = 1;
+    }
+
+    //2nd column-- down
+    else if (grid[0][1] === 1 && grid[1][1] === 1 && grid[2][1] === 0) {
+      grid[2][1] = 1;
+    }
+    else if (grid[0][1] === 1 && grid[2][1] === 1 && grid[1][1] === 0) {
+      grid[1][1] = 1;
+    }
+    else if (grid[1][1] === 1 && grid[2][1] === 1 && grid[0][1] === 0) {
+      grid[0][1] = 1;
+    }
+
+    //3rd column-- down
+    else if (grid[0][2] === 1 && grid[1][2] === 1 && grid[2][2] === 0) {
+      grid[2][2] = 1;
+    }
+    else if (grid[0][2] === 1 && grid[2][2] === 1 && grid[1][2] === 0) {
+      grid[1][2] = 1;
+    }
+    else if (grid[1][2] === 1 && grid[2][2] === 1 && grid[0][2] === 0) {
+      grid[0][2] = 1;
+    }
+
+    //top left to bottom right diagonal
+    else if (grid[0][0] === 1 && grid[1][1] === 1 && grid[2][2] === 0) {
+      grid[2][2] = 1;
+    }
+    else if (grid[0][0] === 1 && grid[2][2] === 1 && grid[1][1] === 0) {
+      grid[1][1] = 1;
+    }
+    else if (grid[1][1] === 1 && grid[2][2] === 1 && grid[0][0] === 0) {
+      grid[0][0] = 1;
+    }
+
+    //top right to bottom left diagonal
+    else if (grid[0][2] === 1 && grid[1][1] === 1 && grid[2][0] === 0) {
+      grid[2][0] = 1;
+    }
+    else if (grid[0][2] === 1 && grid[2][0] === 1 && grid[1][1] === 0) {
+      grid[1][1] = 1;
+    }
+    else if (grid[2][0] === 1 && grid[1][1] === 1 && grid[0][2] === 0) {
+      grid[0][2] = 1;
+    }
+
+    //place X where PLAYER might win
+    //top row-- across
+    else if (grid[0][0] === 2 && grid[0][1] === 2 && grid[0][2] === 0) {
+      grid[0][2] = 1;
+    }
+    else if (grid[0][0] === 2 && grid[0][2] === 2 && grid[0][1] === 0) {
+      grid[0][1] = 1;
+    }
+    else if (grid[0][1] === 2 && grid[0][2] === 2 && grid[0][0] === 0) {
+      grid[0][0] = 1;
+    }
+
+    //middle row-- across
+    else if (grid[1][0] === 2 && grid[1][1] === 2 && grid[1][2] === 0) {
+      grid[1][2] = 1;
+    }
+    else if (grid[1][0] === 2 && grid[1][2] === 2 && grid[1][1] === 0) {
+      grid[1][1] = 1;
+    }
+    else if (grid[1][1] === 2 && grid[1][2] === 2 && grid[1][0] === 0) {
+      grid[1][0] = 1;
+    }
+
+    //bottom row-- across
+    else if (grid[2][0] === 2 && grid[2][1] === 2 && grid[2][2] === 0) {
+      grid[2][2] = 1;
+    }
+    else if (grid[2][0] === 2 && grid[2][2] === 2 && grid[2][1] === 0) {
+      grid[2][1] = 1;
+    }
+    else if (grid[2][1] === 2 && grid[2][2] === 2 && grid[2][0] === 0) {
+      grid[2][0] = 1;
+    }
+
+    //1st column-- down
+    else if (grid[0][0] === 2 && grid[1][0] === 2 && grid[2][0] === 0) {
+      grid[2][0] = 1;
+    }
+    else if (grid[0][0] === 2 && grid[2][0] === 2 && grid[1][0] === 0) {
+      grid[1][0] = 1;
+    }
+    else if (grid[1][0] === 2 && grid[2][0] === 2 && grid[0][0] === 0) {
+      grid[0][0] = 1;
+    }
+
+    //2nd column-- down
+    else if (grid[0][1] === 2 && grid[1][1] === 2 && grid[2][1] === 0) {
+      grid[2][1] = 1;
+    }
+    else if (grid[0][1] === 2 && grid[2][1] === 2 && grid[1][1] === 0) {
+      grid[1][1] = 1;
+    }
+    else if (grid[1][1] === 2 && grid[2][1] === 2 && grid[0][1] === 0) {
+      grid[0][1] = 1;
+    }
+
+    //3rd column-- down
+    else if (grid[0][2] === 2 && grid[1][2] === 2 && grid[2][2] === 0) {
+      grid[2][2] = 1;
+    }
+    else if (grid[0][2] === 2 && grid[2][2] === 2 && grid[1][2] === 0) {
+      grid[1][2] = 1;
+    }
+    else if (grid[1][2] === 2 && grid[2][2] === 2 && grid[0][2] === 0) {
+      grid[0][2] = 1;
+    }
+
+    //top left to bottom right diagonal
+    else if (grid[0][0] === 2 && grid[1][1] === 2 && grid[2][2] === 0) {
+      grid[2][2] = 1;
+    }
+    else if (grid[0][0] === 2 && grid[2][2] === 2 && grid[1][1] === 0) {
+      grid[1][1] = 1;
+    }
+    else if (grid[1][1] === 2 && grid[2][2] === 2 && grid[0][0] === 0) {
+      grid[0][0] = 1;
+    }
+
+    //top right to bottom left diagonal
+    else if (grid[0][2] === 2 && grid[1][1] === 2 && grid[2][0] === 0) {
+      grid[2][0] = 1;
+    }
+    else if (grid[0][2] === 2 && grid[2][0] === 2 && grid[1][1] === 0) {
+      grid[1][1] = 1;
+    }
+    else if (grid[2][0] === 2 && grid[1][1] === 2 && grid[0][2] === 0) {
+      grid[0][2] = 1;
+    }
+
+    //random placing
     else {
-      //place X where player might win
-      //top row-- across
-      if (grid[0][0] === 2 && grid[0][1] === 2) {
-        grid[0][2] = 1;
-      }
-      if (grid[0][0] === 2 && grid[0][2] === 2) {
-        grid[0][1] = 1;
-      }
-      if (grid[0][1] === 2 && grid[0][2] === 2) {
-        grid[0][0] = 1;
-      }
+      for (let i = 0; i < 9; i++) {
+        if (grid[randomY][randomX] === 0) {
+          grid[randomY][randomX] = 1;
+        }
 
-      //middle row-- across
-      if (grid[1][0] === 2 && grid[1][1] === 2) {
-        grid[1][2] = 1;
       }
-      if (grid[1][0] === 2 && grid[1][2] === 2) {
-        grid[1][1] = 1;
-      }
-      if (grid[1][1] === 2 && grid[1][2] === 2) {
-        grid[1][0] = 1;
-      }
-
-      //bottom row-- across
-      if (grid[2][0] === 2 && grid[2][1] === 2) {
-        grid[2][2] = 1;
-      }
-      if (grid[2][0] === 2 && grid[2][2] === 2) {
-        grid[2][1] = 1;
-      }
-      if (grid[2][1] === 2 && grid[2][2] === 2) {
-        grid[2][0] = 1;
-      }
-
-      //1st column-- down
-      if (grid[0][0] === 2 && grid[1][0] === 2) {
-        grid[2][0] = 1;
-      }
-      if (grid[0][0] === 2 && grid[2][0] === 2) {
-        grid[1][0] = 1;
-      }
-      if (grid[1][0] === 2 && grid[2][0] === 2) {
-        grid[0][0] = 1;
-      }
-
-      //2nd column-- down
-      if (grid[0][1] === 2 && grid[1][1] === 2) {
-        grid[2][1] = 1;
-      }
-      if (grid[0][1] === 2 && grid[2][1] === 2) {
-        grid[1][1] = 1;
-      }
-      if (grid[1][1] === 2 && grid[2][1] === 2) {
-        grid[0][1] = 1;
-      }
-
-      //3rd column-- down
-      if (grid[0][2] === 2 && grid[1][2] === 2) {
-        grid[2][2] = 1;
-      }
-      if (grid[0][2] === 2 && grid[2][2] === 2) {
-        grid[1][2] = 1;
-      }
-      if (grid[1][2] === 2 && grid[2][2] === 2) {
-        grid[0][2] = 1;
-      }
-
-      //top left to bottom right diagonal
-      if (grid[0][0] === 2 && grid[1][1] === 2) {
-        grid[2][2] = 1;
-      }
-      if (grid[0][0] === 2 && grid[2][2] === 2) {
-        grid[1][1] = 1;
-      }
-      if (grid[1][1] === 2 && grid[2][2] === 2) {
-        grid[0][0] = 1;
-      }
-
-      //top right to bottom left diagonal
-      if (grid[0][2] === 2 && grid[1][1] === 2) {
-        grid[2][0] = 1;
-      }
-      if (grid[0][2] === 2 && grid[2][0] === 2) {
-        grid[1][1] = 1;
-      }
-      if (grid[2][0] === 2 && grid[1][1] === 2) {
-        grid[0][2] = 1;
-      }
-
     }
 
-    console.log("x");
     yourTurn = !yourTurn;
   }
 }
+
 
 //VICTORY CONDITIONS
 function winCheck() {
@@ -274,7 +360,6 @@ function winCheck() {
 function displayVictoryScreen() {
   if (victoryScreen) {
     image(victoryScreenImg, 0, 0, width, height);
-    
   }
 }
 
