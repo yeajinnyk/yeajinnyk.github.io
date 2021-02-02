@@ -7,7 +7,7 @@
 
 
 //NOTE TO SELF: 
-//NEXT THINGS TO WORK ON: 
+//NEXT THINGS TO WORK ON: //FIX THE VICTORY SCREENS????????????
 //                        -talley scores
 //                        -UI (menu, buttons, particular victory screens)
 //                        -add music + sound effects
@@ -23,8 +23,8 @@ let yourTurn;
 let waitTime = 2000;
 let lastSwitchTime = 0;
 
-let computerFirstTurn;
 let randomX, randomY;
+let blanks;
 let victoryScreen, otherVictoryScreenImg, drawScreenImg;
 
 let gameMode;
@@ -60,7 +60,8 @@ function setup() {
   
   victoryScreen = false;
   yourTurn = true;
-  computerFirstTurn = 0;
+
+  blanks = 9;
 }
 
 //INTERACTIVE CONTROLS
@@ -84,14 +85,14 @@ function mousePressed() {
     grid[y][x] = 2;
     yourTurn = !yourTurn;
     lastSwitchTime = millis();
-
-    computerFirstTurn += 1;
   
   }
   if (gameMode === "pvp" && !yourTurn && grid[y][x] === 0) {
     grid[y][x] = 1;
     yourTurn = !yourTurn;
   }
+
+  blanks--;
 
 }
 
@@ -319,6 +320,7 @@ function computerTurn() {
       }
     }
 
+    blanks--;
     yourTurn = !yourTurn;
   }
 }
@@ -360,6 +362,12 @@ function winCheck(oOrX, whoseVictory) {
   else if (grid[2][0] === oOrX && grid[2][0] === grid[1][1] && grid[2][0] === grid[0][2]) {
     victoryScreen = whoseVictory;
   }
+
+  else if (noBlanks()) {
+    victoryScreen = "draw";
+  }
+
+
 }
 
 //DISPLAY UI
@@ -373,6 +381,10 @@ function displayVictoryScreen() {
   else if (victoryScreen === "draw") {
     image(drawScreenImg, 0, 0, width, height); //draw screen
   }
+}
+
+function noBlanks() {
+  return blanks === 0;
 }
 
 //DRAW LOOP (PUT EVERYTHING TOGETHER!)
