@@ -56,6 +56,7 @@ function setup() {
   
   victoryScreen = false;
   yourTurn = true;
+  computerFirstTurn = 0;
 }
 
 //INTERACTIVE CONTROLS
@@ -79,6 +80,8 @@ function mousePressed() {
     grid[y][x] = 2;
     yourTurn = !yourTurn;
     lastSwitchTime = millis();
+
+    computerFirstTurn += 1;
   
   }
   if (gameMode === "pvp" && !yourTurn && grid[y][x] === 0) {
@@ -123,6 +126,107 @@ function computerTurn() {
   if (gameMode === "comp" && yourTurn === false && millis() - lastSwitchTime > waitTime) {
     //computer takes its turn
     
+    //random first turn
+    if (computerFirstTurn === 1) {
+  
+      if (grid[randomY][randomX] === 0) {
+        grid[randomY][randomX] = 1;
+        computerFirstTurn += 1;
+      }
+    }
+
+    else {
+      //place X where player might win
+      //top row-- across
+      if (grid[0][0] === 2 && grid[0][1] === 2) {
+        grid[0][2] = 1;
+      }
+      if (grid[0][0] === 2 && grid[0][2] === 2) {
+        grid[0][1] = 1;
+      }
+      if (grid[0][1] === 2 && grid[0][2] === 2) {
+        grid[0][0] = 1;
+      }
+
+      //middle row-- across
+      if (grid[1][0] === 2 && grid[1][1] === 2) {
+        grid[1][2] = 1;
+      }
+      if (grid[1][0] === 2 && grid[1][2] === 2) {
+        grid[1][1] = 1;
+      }
+      if (grid[1][1] === 2 && grid[1][2] === 2) {
+        grid[1][0] = 1;
+      }
+
+      //bottom row-- across
+      if (grid[2][0] === 2 && grid[2][1] === 2) {
+        grid[2][2] = 1;
+      }
+      if (grid[2][0] === 2 && grid[2][2] === 2) {
+        grid[2][1] = 1;
+      }
+      if (grid[2][1] === 2 && grid[2][2] === 2) {
+        grid[2][0] = 1;
+      }
+
+      //1st column-- down
+      if (grid[0][0] === 2 && grid[1][0] === 2) {
+        grid[2][0] = 1;
+      }
+      if (grid[0][0] === 2 && grid[2][0] === 2) {
+        grid[1][0] = 1;
+      }
+      if (grid[1][0] === 2 && grid[2][0] === 2) {
+        grid[0][0] = 1;
+      }
+
+      //2nd column-- down
+      if (grid[0][1] === 2 && grid[1][1] === 2) {
+        grid[2][1] = 1;
+      }
+      if (grid[0][1] === 2 && grid[2][1] === 2) {
+        grid[1][1] = 1;
+      }
+      if (grid[1][1] === 2 && grid[2][1] === 2) {
+        grid[0][1] = 1;
+      }
+
+      //3rd column-- down
+      if (grid[0][2] === 2 && grid[1][2] === 2) {
+        grid[2][2] = 1;
+      }
+      if (grid[0][2] === 2 && grid[2][2] === 2) {
+        grid[1][2] = 1;
+      }
+      if (grid[1][2] === 2 && grid[2][2] === 2) {
+        grid[0][2] = 1;
+      }
+
+      //top left to bottom right diagonal
+      if (grid[0][0] === 2 && grid[1][1] === 2) {
+        grid[2][2] = 1;
+      }
+      if (grid[0][0] === 2 && grid[2][2] === 2) {
+        grid[1][1] = 1;
+      }
+      if (grid[1][1] === 2 && grid[2][2] === 2) {
+        grid[0][0] = 1;
+      }
+
+      //top right to bottom left diagonal
+      if (grid[0][2] === 2 && grid[1][1] === 2) {
+        grid[2][0] = 1;
+      }
+      if (grid[0][2] === 2 && grid[2][0] === 2) {
+        grid[1][1] = 1;
+      }
+      if (grid[2][0] === 2 && grid[1][1] === 2) {
+        grid[0][2] = 1;
+      }
+
+    }
+
     console.log("x");
     yourTurn = !yourTurn;
   }
