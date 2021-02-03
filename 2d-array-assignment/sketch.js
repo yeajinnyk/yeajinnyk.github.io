@@ -2,13 +2,15 @@
 // Jinny Kim
 // 01. 27. 2021
 //
-// Extra for Experts:
-// - describe what you did to take this project "above and beyond"
+// Extra:
+// - added sound, UI, slightly smart computer player, a portion of code 
+//  to keep the canvas square, added a slight delay before computer
+//  makes decision to make it look less rushed and instant.
 
 
 //NOTE TO SELF: 
-//NEXT THINGS TO WORK ON: -FIX THE VICTORY SCREENS????????????
-//                        -talley scores
+//NEXT THINGS TO WORK ON: 
+//                        -talley scores?
 //                        -UI (menu, buttons, particular victory screens)
 
 
@@ -379,6 +381,7 @@ function winCheck(oOrX, whoseVictory) {
     victoryScreen = whoseVictory;
   }
 
+  //no one wins
   else if (noBlanks()) {
     victoryScreen = "draw";
   }
@@ -399,6 +402,7 @@ function displayVictoryScreen() {
   }
 }
 
+//if all tiles are filled, return true
 function noBlanks() {
   return blanks === 0;
 }
@@ -406,9 +410,12 @@ function noBlanks() {
 //DRAW LOOP (PUT EVERYTHING TOGETHER!)
 function draw() {
   background("white");
+
   computerTurn();
   displayBoard();
+
   winCheck(1, "other player win");
   winCheck(2, "main player win");
+
   displayVictoryScreen();
 }
