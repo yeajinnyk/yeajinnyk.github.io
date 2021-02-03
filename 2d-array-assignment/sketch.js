@@ -18,8 +18,12 @@
 //GLOBAL VARIABLES
 let grid;
 let rows, cols, cellSize;
-let xImg, oImg;
-let victoryScreen, victoryScreenImg, otherVictoryScreenImg, drawScreenImg;
+let ghostImg, snowImg;
+let victoryScreen, victoryScreenImg, otherVictoryScreenImg, drawScreenImg, startMenuImg;
+
+let bunVsComp, bunVsBun, playAgainButton;
+let optionButtonWidth, optionButtonHeight, optionButtonX, pvpButtonY, pvcompButtonY;
+let playButtonWidth, playButtonHeight, playButtonX, playButtonY;
 
 let yourTurn;
 let waitTime = 2000;
@@ -30,7 +34,7 @@ let blanks; //to count how many tiles are empty (for a draw situation)
 
 let bgMusic, playerClick, otherClick;
 
-let gameMode; //pvp or player vs comp
+let gameMode = "start"; //pvp or player vs comp
 
 //PRELOAD + SETUP
 function preload() {
@@ -39,15 +43,35 @@ function preload() {
   playerClick = loadSound("assets/playerSound.wav");
   otherClick = loadSound("assets/otherPlayerSound.wav");
 
-  //X and O image preload
-  xImg = loadImage("assets/x.png");
-  oImg = loadImage("assets/o.png");
+  //"X" and "O" image preload
+  ghostImg = loadImage("assets/ghostBun.png");
+  snowImg = loadImage("assets/snowBun.png");
 
   //end game screen image preload
-  victoryScreenImg = loadImage("assets/tempVictory.png");
-  otherVictoryScreenImg = loadImage("assets/otherVictoryTemp.png");
-  drawScreenImg = loadImage("assets/tempDraw.png");
+  victoryScreenImg = loadImage("assets/snowBunWin.png");
+  otherVictoryScreenImg = loadImage("assets/ghostBunWin.png");
+  drawScreenImg = loadImage("assets/drawScreen.png");
+  startMenuImg = loadImage("assets/menuScreen.png");
 
+  //button image preload
+  bunVsComp = loadImage("assets/bunAndComp.png");
+  bunVsBun = loadImage("assets/pvp.png");
+  playAgainButton = loadImage("assets/playAgain.png");
+
+}
+
+function displayStart() {
+  if (gameMode === "start") {
+    image(startMenuImg, 0, 0, width, height);
+    image(bunVsComp, optionButtonX, pvcompButtonY, optionButtonWidth, optionButtonHeight);
+    image(bunVsBun, optionButtonX, pvpButtonY, optionButtonWidth, optionButtonHeight);
+  }
+}
+
+function displayPlayAgain() {
+  if (gameMode !== "start" && noBlanks()) {
+    image(playAgainButton, playButtonX, playButtonY, playButtonWidth, playButtonHeight);
+  }
 }
 
 function setup() {
@@ -71,45 +95,71 @@ function setup() {
   cols = grid[0].length;
   cellSize = width / cols;
   
+  optionButtonWidth = bunVsComp.width * 0.4;
+  optionButtonHeight = bunVsComp.height * 0.4;
+  optionButtonX = width *0.7;
+  pvpButtonY = height * 0.7;
+  pvcompButtonY = height * 0.5;
+  
+  playButtonWidth = playAgainButton.width * 0.5;
+  playButtonHeight = playAgainButton.height * 0.5;
+  playButtonX = width * 0.3;
+  playButtonY = height * 0.7;
+  
   victoryScreen = false;
   yourTurn = true;
-
+  
   blanks = 9;
 }
 
 //INTERACTIVE CONTROLS
 function keyPressed() {
-  if (key === "1") {
-    gameMode = "comp";
-  }
-  if (key === "2") {
-    gameMode = "pvp";
-  }
   if (key === "c") {
     setup();
   }
 }
 
 function mousePressed() {
-  let x = Math.floor(mouseX / cellSize);
-  let y = Math.floor(mouseY / cellSize);
+  if (gameMode === "start") {
+    //pvp button
+    if (mouseX > optionButtonX && mouseX < optionButtonX + optionButtonWidth && mouseY > pvpButtonY && mouseY < pvpButtonY + optionButtonHeight) {
+      gameMode = "pvp";
+    }
+    //player vs computer button
+    if (mouseX > optionButtonX && mouseX < optionButtonX + optionButtonWidth && mouseY > pvcompButtonY && mouseY < pvcompButtonY + optionButtonHeight) {
+      gameMode = "comp";
+    }
+  }
 
-  if (yourTurn && grid[y][x] === 0) { //o
-    playerClick.play();
-
-    grid[y][x] = 2;
-    yourTurn = !yourTurn;
-    lastSwitchTime = millis();
+  if (gameMode !== "start" && noBlanks()) {
+    if (mouseX > playButtonX && mouseX < playButtonX + playButtonWidth && mouseY > playButtonY && mouseY < playButtonY + playButtonHeight) {
+      setup();
+    }
+  }
   
-  }
-  if (gameMode === "pvp" && !yourTurn && grid[y][x] === 0) {
-    otherClick.play();
+  //placing tokens
+  if (gameMode !== "start" && noBlanks() === false) {
+    let x = Math.floor(mouseX / cellSize);
+    let y = Math.floor(mouseY / cellSize);
 
-    grid[y][x] = 1;
-    yourTurn = !yourTurn;
-  }
+    if (yourTurn && grid[y][x] === 0) { //o
+      playerClick.play();
+  
+      grid[y][x] = 2;
+      yourTurn = !yourTurn;
+      lastSwitchTime = millis();
+    
+    }
+    if (gameMode === "pvp" && !yourTurn && grid[y][x] === 0) {
+      otherClick.play();
+  
+      grid[y][x] = 1;
+      yourTurn = !yourTurn;
+    }
+  
+    blanks--;
 
-  blanks--;
+  }
 
 }
 
@@ -134,10 +184,10 @@ function displayBoard() {
         rect(x*cellSize, y*cellSize, cellSize, cellSize); //blank space
       }
       else if (grid[y][x] === 1) {
-        image(xImg, x*cellSize, y*cellSize, cellSize, cellSize); //X
+        image(ghostImg, x*cellSize, y*cellSize, cellSize, cellSize); //X
       }
       else if (grid[y][x] === 2) {
-        image(oImg, x*cellSize, y*cellSize, cellSize, cellSize); //O
+        image(snowImg, x*cellSize, y*cellSize, cellSize, cellSize); //O
       }
     }
   }
@@ -418,4 +468,6 @@ function draw() {
   winCheck(2, "main player win");
 
   displayVictoryScreen();
+  displayPlayAgain();
+  displayStart();
 }
