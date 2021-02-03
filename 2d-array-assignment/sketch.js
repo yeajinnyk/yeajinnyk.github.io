@@ -10,8 +10,10 @@
 
 //NOTE TO SELF: 
 //NEXT THINGS TO WORK ON: 
-//                        -talley scores?
-//                        -UI (menu, buttons, particular victory screens)
+//         -talley scores?
+//         -FIX: placing a tile immediately when clicking an option
+//                button. we don't like that!!!
+//         -also check if the play again button and victory check is working...
 
 
 
@@ -69,9 +71,13 @@ function displayStart() {
 }
 
 function displayPlayAgain() {
-  if (gameMode !== "start" && noBlanks()) {
+  if (gameMode !== "start" && gameEnd()) {
     image(playAgainButton, playButtonX, playButtonY, playButtonWidth, playButtonHeight);
   }
+}
+
+function gameEnd() {
+  return victoryScreen === "other player win" || victoryScreen === "main player win" || victoryScreen === "draw";
 }
 
 function setup() {
@@ -131,7 +137,7 @@ function mousePressed() {
     }
   }
 
-  if (gameMode !== "start" && noBlanks()) {
+  if (gameMode !== "start" && gameEnd()) {
     if (mouseX > playButtonX && mouseX < playButtonX + playButtonWidth && mouseY > playButtonY && mouseY < playButtonY + playButtonHeight) {
       setup();
     }
