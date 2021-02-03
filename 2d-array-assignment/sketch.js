@@ -7,33 +7,41 @@
 
 
 //NOTE TO SELF: 
-//NEXT THINGS TO WORK ON: //FIX THE VICTORY SCREENS????????????
+//NEXT THINGS TO WORK ON: -FIX THE VICTORY SCREENS????????????
 //                        -talley scores
 //                        -UI (menu, buttons, particular victory screens)
-//                        -add music + sound effects
 
 
 
 //GLOBAL VARIABLES
 let grid;
 let rows, cols, cellSize;
-let xImg, oImg, victoryScreenImg;
+let xImg, oImg;
+let victoryScreen, victoryScreenImg, otherVictoryScreenImg, drawScreenImg;
 
 let yourTurn;
 let waitTime = 2000;
 let lastSwitchTime = 0;
 
 let randomX, randomY;
-let blanks;
-let victoryScreen, otherVictoryScreenImg, drawScreenImg;
+let blanks; //to count how many tiles are empty (for a draw situation)
 
-let gameMode;
+let bgMusic, playerClick, otherClick;
+
+let gameMode; //pvp or player vs comp
 
 //PRELOAD + SETUP
 function preload() {
+  //sound preload
+  bgMusic = loadSound("assets/bgMusic.ogg");
+  playerClick = loadSound("assets/playerSound.wav");
+  otherClick = loadSound("assets/otherPlayerSound.wav");
+
+  //X and O image preload
   xImg = loadImage("assets/x.png");
   oImg = loadImage("assets/o.png");
 
+  //end game screen image preload
   victoryScreenImg = loadImage("assets/tempVictory.png");
   otherVictoryScreenImg = loadImage("assets/otherVictoryTemp.png");
   drawScreenImg = loadImage("assets/tempDraw.png");
@@ -41,6 +49,9 @@ function preload() {
 }
 
 function setup() {
+  bgMusic.stop(); //put stop at the beginning so when setup is called again, the songs don't layer on top
+  bgMusic.loop();
+
   //makes sure canvas is square no matter the window's dimensions
   if (windowWidth > windowHeight) {
     createCanvas(windowHeight, windowHeight);
@@ -82,12 +93,16 @@ function mousePressed() {
   let y = Math.floor(mouseY / cellSize);
 
   if (yourTurn && grid[y][x] === 0) { //o
+    playerClick.play();
+
     grid[y][x] = 2;
     yourTurn = !yourTurn;
     lastSwitchTime = millis();
   
   }
   if (gameMode === "pvp" && !yourTurn && grid[y][x] === 0) {
+    otherClick.play();
+
     grid[y][x] = 1;
     yourTurn = !yourTurn;
   }
@@ -321,6 +336,7 @@ function computerTurn() {
     }
 
     blanks--;
+    otherClick.play();
     yourTurn = !yourTurn;
   }
 }

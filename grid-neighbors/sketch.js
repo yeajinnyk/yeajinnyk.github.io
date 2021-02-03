@@ -14,6 +14,7 @@ function preload() {
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
+  bgMusic.stop();
   bgMusic.loop();
 
   rows = grid.length;
