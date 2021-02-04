@@ -113,11 +113,6 @@ function setup() {
 }
 
 //INTERACTIVE CONTROLS
-function keyPressed() {
-  if (key === "c") {
-    setup();
-  }
-}
 
 function mousePressed() {
   if (gameMode === "start") {
