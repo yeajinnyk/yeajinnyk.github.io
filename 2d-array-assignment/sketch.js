@@ -135,9 +135,11 @@ function mousePressed() {
     if (mouseX > optionButtonX && mouseX < optionButtonX + optionButtonWidth && mouseY > pvcompButtonY && mouseY < pvcompButtonY + optionButtonHeight) {
       gameMode = "comp";
     }
+    yourTurn = true;
   }
 
-  if (gameMode !== "start" && gameEnd()) {
+  //play again button
+  if (gameEnd()) {
     if (mouseX > playButtonX && mouseX < playButtonX + playButtonWidth && mouseY > playButtonY && mouseY < playButtonY + playButtonHeight) {
       setup();
     }
@@ -154,6 +156,7 @@ function mousePressed() {
       grid[y][x] = 2;
       yourTurn = !yourTurn;
       lastSwitchTime = millis();
+      blanks--;
     
     }
     if (gameMode === "pvp" && !yourTurn && grid[y][x] === 0) {
@@ -161,12 +164,9 @@ function mousePressed() {
   
       grid[y][x] = 1;
       yourTurn = !yourTurn;
+      blanks--;
     }
-  
-    blanks--;
-
   }
-
 }
 
 //FUNCTIONS FOR THE BOARD ITSELF
