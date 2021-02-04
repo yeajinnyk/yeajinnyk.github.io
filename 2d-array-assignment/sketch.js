@@ -6,15 +6,8 @@
 // - added sound, UI, slightly smart computer player, a portion of code 
 //  to keep the canvas square, added a slight delay before computer
 //  makes decision to make it look less rushed and instant.
-
-
-//NOTE TO SELF: 
-//NEXT THINGS TO WORK ON: 
-//         -talley scores?
-//         -FIX: placing a tile immediately when clicking an option
-//                button. we don't like that!!!
-//         -also check if the play again button and victory check is working...
-
+// Note:
+// - music + sound effects are from OpenGameArt!
 
 
 //GLOBAL VARIABLES
@@ -97,6 +90,7 @@ function setup() {
   
   grid = createEmptyBoard();
   
+  //setting up values
   rows = grid.length;
   cols = grid[0].length;
   cellSize = width / cols;
@@ -137,35 +131,35 @@ function mousePressed() {
     }
     yourTurn = true;
   }
-
+  
   //play again button
-  if (gameEnd()) {
+  else if (gameEnd()) {
     if (mouseX > playButtonX && mouseX < playButtonX + playButtonWidth && mouseY > playButtonY && mouseY < playButtonY + playButtonHeight) {
       setup();
     }
   }
-  
   //placing tokens
-  if (gameMode !== "start" && noBlanks() === false) {
+  else if (gameMode !== "start" && noBlanks() === false) {
     let x = Math.floor(mouseX / cellSize);
     let y = Math.floor(mouseY / cellSize);
-
+    
     if (yourTurn && grid[y][x] === 0) { //o
       playerClick.play();
-  
+      
       grid[y][x] = 2;
       yourTurn = !yourTurn;
       lastSwitchTime = millis();
       blanks--;
-    
+      
     }
     if (gameMode === "pvp" && !yourTurn && grid[y][x] === 0) {
       otherClick.play();
-  
+      
       grid[y][x] = 1;
       yourTurn = !yourTurn;
       blanks--;
     }
+
   }
 }
 
@@ -201,7 +195,9 @@ function displayBoard() {
 
 //FUNCTIONS CONTROLLING COMPUTER PLAYER
 function computerTurn() {
-  if (gameMode === "comp" && yourTurn === false && millis() - lastSwitchTime > waitTime) {
+  //if gamemode is player vs computer, if it is not the player's turn, and it is not at the end of the game,
+  //computer takes its turn after 2 seconds.
+  if (gameMode === "comp" && yourTurn === false && !gameEnd() && millis() - lastSwitchTime > waitTime) {
     randomX = int(random(3));
     randomY = int(random(3));
 
@@ -448,10 +444,10 @@ function winCheck(oOrX, whoseVictory) {
 //DISPLAY UI
 function displayVictoryScreen() {
   if (victoryScreen === "other player win") { 
-    image(otherVictoryScreenImg, 0, 0, width, height); //other player win!
+    image(otherVictoryScreenImg, 0, 0, width, height); //ghost buns win
   }
   else if (victoryScreen === "main player win") {
-    image(victoryScreenImg, 0, 0, width, height); //main player win!
+    image(victoryScreenImg, 0, 0, width, height); //snow buns win
   }
   else if (victoryScreen === "draw") {
     image(drawScreenImg, 0, 0, width, height); //draw screen
