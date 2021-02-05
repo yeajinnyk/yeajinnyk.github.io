@@ -103,7 +103,7 @@ function setup() {
   
   playButtonWidth = playAgainButton.width * 0.5;
   playButtonHeight = playAgainButton.height * 0.5;
-  playButtonX = width * 0.3;
+  playButtonX = width/2 - playButtonWidth/2;
   playButtonY = height * 0.7;
   
   victoryScreen = false;
