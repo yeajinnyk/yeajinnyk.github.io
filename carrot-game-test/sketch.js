@@ -3,33 +3,46 @@
 // 02. 17. 2021
 
 //NEXT TO WORK ON: 
-// - fix interval of spawning carrots (ask mr. schellenberg)
-// - incorporate death screen
+// - fix interval of spawning carrots 
+// - incorporate proper death screen
 // - incorporation back button
+// - move to main project
 
+
+//GLOBAL VARIABLES
+//carrot + basket 
 let carrotImg, carrotGameBg, basketImg;
 let basketWidth, basketHeight;
 let basketX, basketY;
-let basketdX = 3;
+let basketdX = 5;
 let carrotSize = 40;
 
 let carrots = [];
 
+//health bar + score
 let fullHealthImg, twoHeartsImg, oneHeartImg, deadImg;
 let healthBarWidth, healthBarHeight, healthBarX, healthBarY;
+let carrotDeathScreen;
 
 let health, score, points;
-let carrotGamePlaying = true;
 
+//carrot game state
+let carrotGamePlaying;
+
+let timer;
+
+//CLASSES
+//carrots
 class Carrot {
   constructor() {
-    this.x = random(width);
+    this.size = carrotSize;
+    this.x = random(width - this.size);
     this.y = 0;
     this.dx = 0;
     this.dy = random(5, 10);
-    this.size = carrotSize;
   }
 
+  //check if carrot has been caught by the player
   notCaught() {
     if (this.x > basketX && this.x < basketX + basketWidth && this.y + this.size > basketY && this.y < basketY + basketHeight) {
       return false;
@@ -51,15 +64,28 @@ class Carrot {
     }
   }
 
+  //check if the carrot has reached the bottom (player has missed the carrot)
   onScreen() {
     return this.y + this.size < height;
   }
   
 }
 
-function spawnCarrot() {
-  let someCarrot = new Carrot();
-  carrots.push(someCarrot);
+//timer for spawning carrots
+class Timer {
+  constructor() {
+    this.interval = 1500;
+    this.lastSpawn = 0;
+  }
+
+  spawnCarrot() {
+    if (millis() - this.lastSpawn > this.interval && carrotGamePlaying) { //doesn't spawn carrots while in loss screen
+      let someCarrot = new Carrot();
+      carrots.push(someCarrot);
+      
+      this.lastSpawn = millis();
+    }
+  }
 }
 
 function dropCarrot() {
@@ -79,7 +105,9 @@ function dropCarrot() {
   }
 }
 
+//PRELOAD 
 function preload() {
+  //images
   carrotImg = loadImage("assets/good-carrot.png");
   carrotGameBg = loadImage("assets/carrot-game-bg.png");
   basketImg = loadImage("assets/basket.png");
@@ -88,9 +116,12 @@ function preload() {
   twoHeartsImg = loadImage("assets/twoHearts.png");
   oneHeartImg = loadImage("assets/oneHeart.png");
   deadImg = loadImage("assets/noHearts.png");
+
+  carrotDeathScreen = loadImage("assets/temp.png");
 }
 
 function setup() {
+  
   if (windowWidth > windowHeight) {
     createCanvas(windowHeight, windowHeight);
   }
@@ -100,30 +131,35 @@ function setup() {
   else {
     createCanvas(windowWidth, windowHeight);
   }
-
+  
   basketWidth = basketImg.width * 0.3;
   basketHeight = basketImg.height * 0.3;
-
+  
   basketX = width/2;
   basketY = height * 0.65;
-
+  
   healthBarWidth = fullHealthImg.width * 0.5;
   healthBarHeight = fullHealthImg.height * 0.5;
   healthBarX = width * 0.7;
   healthBarY = height * 0.9;
-
+  
   points = 0;
   health = 3;
+  
+  carrotGamePlaying = true;
 
-  window.setInterval(spawnCarrot, 1500); //use something else
+  timer = new Timer();
 }
 
+//displaying the player's score
 function carrotScore() {
   score = "Score: " + points;
+  
   fill("black");
   textSize(20);
   textFont("VERDANA");
   textAlign(CENTER);
+  
   text(score, width/2, height * 0.96);
 }
 
@@ -139,13 +175,13 @@ function displayHealthBar() {
   }
   else {
     image(deadImg, healthBarX, healthBarY, healthBarWidth, healthBarHeight);
-    carrotGamePlaying = false;
+    carrotGamePlaying = false; //signal to display the loss screen
   }
 }
 
 function displayLossScreen() {
   if (!carrotGamePlaying) {
-    background("pink"); //temp
+    image(carrotDeathScreen, 0, 0, width, height); 
   }
 }
 
@@ -158,14 +194,21 @@ function displayBasket() {
 }
 
 function controlBasket() {
-  if (keyIsDown(65)) {
+  if (keyIsDown(65)) { //a
     basketX -= basketdX;
   }
-  if (keyIsDown(68)) {
+  if (keyIsDown(68)) { //d
     basketX += basketdX;
   }
 }
 
+function keyPressed() {
+  if (key === "c") { //temporary clear button
+    setup();
+  }
+}
+
+//keep the basket inside the screen
 function keepBasketIn() {
   if (basketX < 0) {
     basketX = 0;
@@ -175,7 +218,11 @@ function keepBasketIn() {
   }
 }
 
+//putting everything together!
 function draw() {
+  
+  timer.spawnCarrot();
+
   displayCarrotGameBg();
 
   displayBasket();
