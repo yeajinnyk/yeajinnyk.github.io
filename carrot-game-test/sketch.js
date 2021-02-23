@@ -3,7 +3,6 @@
 // 02. 17. 2021
 
 //NEXT TO WORK ON: 
-// - fix interval of spawning carrots 
 // - incorporate proper death screen
 // - incorporation back button
 // - move to main project
