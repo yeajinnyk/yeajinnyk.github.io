@@ -43,7 +43,10 @@ class Carrot {
 
   //check if carrot has been caught by the player
   notCaught() {
-    if (this.x > basketX && this.x < basketX + basketWidth && this.y + this.size > basketY && this.y < basketY + basketHeight) {
+    if (this.x < basketX + basketWidth && this.x > basketX && this.y + this.size > basketY && this.y < basketY + basketHeight) {
+      return false;
+    }
+    else if (this.x + this.size < basketX + basketWidth && this.x + this.size > basketX && this.y + this.size > basketY && this.y < basketY + basketHeight) {
       return false;
     }
     else {
