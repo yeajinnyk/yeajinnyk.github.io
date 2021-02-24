@@ -119,7 +119,7 @@ function preload() {
   oneHeartImg = loadImage("assets/oneHeart.png");
   deadImg = loadImage("assets/noHearts.png");
 
-  carrotDeathScreen = loadImage("assets/temp.png");
+  carrotDeathScreen = loadImage("assets/loss-screen.png");
 }
 
 function setup() {
@@ -196,11 +196,13 @@ function displayBasket() {
 }
 
 function controlBasket() {
-  if (keyIsDown(65)) { //a
-    basketX -= basketdX;
-  }
-  if (keyIsDown(68)) { //d
-    basketX += basketdX;
+  if (carrotGamePlaying) {
+    if (keyIsDown(65)) { //a
+      basketX -= basketdX;
+    }
+    if (keyIsDown(68)) { //d
+      basketX += basketdX;
+    }
   }
 }
 
