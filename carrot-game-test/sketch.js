@@ -1,12 +1,6 @@
-// Carrot Game Draft
+// Carrot Game Test
 // Jinny kim
 // 02. 17. 2021
-
-//NEXT TO WORK ON: 
-// - incorporate proper death screen
-// - incorporation back button
-// - move to main project
-
 
 //GLOBAL VARIABLES
 //carrot + basket 
