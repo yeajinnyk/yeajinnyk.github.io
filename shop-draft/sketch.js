@@ -4,10 +4,9 @@
 
 // NOTE TO SELF:
 // NEXT TO WORK ON:
-//        - Make the purchasing action work
-//        - (program should know item belongs to player now)
+//        - (program should know item belongs to player now) --> Add to storage system
 //        - Add more purchasables
-//        - More pages of items in the menu (arrow keys to click?)
+//        - Arrow key UI
 
 //GLOBAL VARIABLES
 let shopBgImg, shopMenuImg, shopKeeperMessageOne;
@@ -24,9 +23,25 @@ let shopMsgWidth, shopMsgHeight, shopMsgX, shopMsgY;
 
 let txtSize = 15;
 
+let mouseIsClicked;
+let royalOutfit, hoodie, carrotDoll, eyeMask, scarf, determinedLook, droopyEyes, excitedFace, headBow;
+
+let arrowY, arrowSize, leftArrowX, rightArrowX;
+
+let shopList = [];
+let menuPage;
+
+//per page
+let firstItemY = 50;
+let secondItemY = 160;
+let thirdItemY = 270;
+let fourthItemY = 380;
+let fifthItemY = 490;
+
+
 //CLASSES
 class ShopItem {
-  constructor(name, img, desc, price, y) {
+  constructor(name, img, desc, price, y, page) {
     this.itemImg = img;
     this.item = name;
 
@@ -40,31 +55,77 @@ class ShopItem {
     this.x = width * 0.62;
     this.y = y;
 
-    this.selectionWidth = this.x + 160;
-    this.selectionHeight = this.y + this.height;
+    this.page = page;
     
     this.text = this.item + "\nCost: " + str(this.price) + "\n" + this.desc;
   }
 
   display() {
-    noStroke();
-    rect(this.x + this.width + 10, this.y, 160, this.height);
-    image(this.itemImg, this.x, this.y, this.width, this.height);
+    if (gameState === "shop") {
+      if (menuPage === this.page) {
+        noStroke();
+        fill("white");
+        rect(this.x + this.width + 10, this.y, 160, this.height);
+        image(this.itemImg, this.x, this.y, this.width, this.height);
+    
+        textAlign(LEFT, CENTER);
+        fill("black");
+        textSize(txtSize);
+        text(this.text, this.x + this.width + 20, this.y + 45);
+    
+        //when bought, gray it out to let player know it's been purchased
+        if (this.bought) {
+          fill(0, 0, 0, 150);
+          rect(this.x, this.y, this.width + 170, this.height);
 
-    textAlign(LEFT, CENTER);
-    fill("black");
-    textSize(txtSize);
-    text(this.text, this.x + this.width + 20, this.y + 45);
-
-    if (this.bought) {
-      fill(0, 0, 0, 175);
-      rect(this.x, this.y, 40, this.height);
+          fill("white");
+          textAlign(LEFT, CENTER);
+          textSize(txtSize + 20);
+          text("BOUGHT", this.x + 40, this.y + 45);
+        }
+      }
     }
+
   }
 
   buy() {
-    if (wallet >= this.price && !this.bought) {
-      this.bought = true;
+    if (gameState === "shop") {
+      if (menuPage === this.page) {
+        if (mouseX > this.x && mouseX < this.x + this.width + 170 && mouseY > this.y && mouseY < this.y + this.height) {
+          if (wallet >= this.price && !this.bought) {
+            this.bought = true;
+            wallet -= this.price;
+            mouseIsClicked = false;
+          }
+        }
+      }
+    }
+  }
+
+  //used to detect page location
+  pageNumber() {
+    return this.page;
+  }
+
+  //will be used to detect whether an item should appear in the storage/closet later
+  playerOwns() {
+    return this.bought;
+  }
+}
+
+function mousePressed() {
+  if (gameState === "shop") {
+    //purchase action
+    for (let item of shopList) {
+      item.buy();
+    }
+
+    //arrow keys for shop menu
+    if (mouseX > rightArrowX && mouseX < rightArrowX + arrowSize && mouseY > arrowY && mouseY < arrowY + arrowSize) {
+      menuPage++;
+    }
+    else if (menuPage > 1 && mouseX > leftArrowX && mouseX < leftArrowX + arrowSize && mouseY > arrowY && mouseY < arrowY + arrowSize) {
+      menuPage--;
     }
   }
 }
@@ -100,22 +161,79 @@ function setup() {
   shopMsgX = width * 0.025;
   shopMsgY = height * 0.15;
 
+  arrowY = height * 0.91;
+  arrowSize = 30;
+  leftArrowX = width * 0.625;
+  rightArrowX = width * 0.93;
+
+  //set shop item objects in setup. Display and buy functions of the objects are in draw.
+  createShopObjects();
+
+  //put into a list so i can use for loops to run display() and buy() on each item efficiently
+  shopList = [royalOutfit, hoodie, carrotDoll, eyeMask, scarf, determinedLook, droopyEyes, excitedFace, headBow];
+
+  menuPage = 1;
+}
+
+function createShopObjects() {
+  //page 1
+  royalOutfit = new ShopItem("Royal Outfit", royalOutfitImg, '"Fits just right. \nYou are worthy!"', 800, firstItemY, 1);
+  hoodie = new ShopItem("Yellow Hoodie", yellowHoodieImg, '"So comfortable!"', 100, secondItemY, 1);
+  carrotDoll = new ShopItem("Carrot Doll", carrotDollImg, '"Can and will \nbecome your best \nfriend!"', 150, thirdItemY, 1);
+  eyeMask = new ShopItem("Eye Mask", eyeMaskImg, '"Perfect for the \nperfect nap!"', 80, fourthItemY, 1);
+  scarf = new ShopItem("Red Scarf", scarfImg, '"I feel pretty \nadventurous!"', 80, fifthItemY, 1);
+
+  //page 2
+  determinedLook = new ShopItem("Determined", determinedFaceImg, '"Determined as \never!"', 50, firstItemY, 2);
+  droopyEyes = new ShopItem("Droopy", droopyFaceImg, '"Is it nap time \nyet?"', 50, secondItemY, 2);
+  excitedFace = new ShopItem("Excited", excitedFaceImg, '"WOW! So excited!"', 50, thirdItemY, 2);
+  headBow = new ShopItem("Blue Bow", headBowImg, '"Blue like the sky! \nWill carrots fall \nfrom here too?"', 80, fourthItemY, 2);
+
+
+}
+
+function displayItems() {
+  for (let item of shopList) {
+    if (item.pageNumber() === 1) {
+      for (let i = 0; i < 5; i++) {
+        shopList[i].display();
+      }
+    }
+    else if (item.pageNumber() === 2) {
+      for (let i = 5; i < 10; i++) {
+        shopList[i].display();
+      }
+    }
+  }
 }
 
 function draw() {
   displayShop();
   displayWallet();
   displayShopMessages();
-  
-  let royalOutfit = new ShopItem("Royal Outfit", royalOutfitImg, '"Fits just right. \nYou are worthy!"', 50, 40);
-  royalOutfit.display();
-  royalOutfit.buy();
+
+  displayItems();
+  displayArrowKeys();
+
 }
 
 function displayShop() {
   if (gameState === "shop") {
     image(shopBgImg, 0, 0, width, height);
     image(shopMenuImg, shopMenuX, shopMenuY, shopMenuWidth, shopMenuHeight);
+  }
+}
+
+function displayArrowKeys() {
+  if (gameState === "shop") {
+    if (menuPage >= 1) {
+      fill("black");
+
+      rect(rightArrowX, arrowY, arrowSize, arrowSize);
+    }
+    if (menuPage > 1) {
+      rect(leftArrowX, arrowY, arrowSize, arrowSize);
+    }
   }
 }
 
@@ -130,12 +248,14 @@ function displayWallet() {
 
     textSize(20);
     textFont("VERDANA");
-    textAlign(CENTER);
+    textAlign(LEFT);
 
-    text("Coins: " + wallet, width * 0.1, height * 0.05);
+    text("Coins: " + wallet, width * 0.05, height * 0.05);
   }
 }
 
 function displayShopMessages() {
-  image(shopKeeperMessageOne, shopMsgX, shopMsgY, shopMsgWidth, shopMsgHeight);
+  if (gameState === "shop") {
+    image(shopKeeperMessageOne, shopMsgX, shopMsgY, shopMsgWidth, shopMsgHeight);
+  }
 }
