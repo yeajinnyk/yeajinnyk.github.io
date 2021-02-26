@@ -5,7 +5,7 @@
 // NOTE TO SELF:
 // NEXT TO WORK ON:
 //        - (program should know item belongs to player now) --> Add to storage system
-//        - Add more purchasables
+//        - Add more purchasables?
 //        - Arrow key UI
 
 //GLOBAL VARIABLES
@@ -194,13 +194,8 @@ function createShopObjects() {
 
 function displayItems() {
   for (let item of shopList) {
-    if (item.pageNumber() === 1) {
-      for (let i = 0; i < 5; i++) {
-        shopList[i].display();
-      }
-    }
-    else if (item.pageNumber() === 2) {
-      for (let i = 5; i < 10; i++) {
+    if (item.pageNumber() === menuPage) {
+      for (let i = 0; i < shopList.length; i++) {
         shopList[i].display();
       }
     }
